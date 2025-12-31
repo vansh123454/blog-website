@@ -1,0 +1,176 @@
+<%- include('../partial/head') %>
+</head>
+
+<body class="h-screen overflow-hidden bg-gradient-to-br from-amber-50 via-white to-orange-100 flex flex-col font-sans">
+
+  <%- include('../partial/nav') %> 
+
+  <main class="flex-grow px-4 py-6 overflow-y-auto flex items-center justify-center">
+    <div class="w-full max-w-sm">
+
+      <!-- Heading -->
+      <div class="text-center mb-6">
+        <h1 class="text-3xl font-extrabold text-gray-800 tracking-tight">
+          Register Your Account
+        </h1>
+        <p class="text-sm text-gray-500 mt-1">
+          Join MyBlog and start sharing
+        </p>
+      </div>
+
+      <!-- Error showing -->
+       <% if (errors.length > 0) { %>
+          <div class="mb-4 rounded-xl border border-red-300 bg-red-50 p-4">
+            <ul class="space-y-1">
+              <% errors.forEach(err => { %>
+              <li class="text-sm text-red-600 font-medium flex items-center gap-2">
+              <span class="text-red-500">⚠</span>
+                <%= err %>
+              </li>
+              <% }) %>
+            </ul>
+          </div>
+        <% } %>
+
+
+      <!-- Signup Form -->
+      <form
+        action="/signup"
+        method="POST"
+        class="bg-white/90 backdrop-blur-sm shadow-2xl rounded-3xl p-6 flex flex-col gap-3 border border-white"
+      >
+
+        <!-- Name -->
+        <div class="grid grid-cols-2 gap-3">
+          <input
+            type="text"
+            name="firstName"
+            placeholder="First Name"
+            value="<%= oldInput.firstName === '' ? '' : oldInput.firstName %>"
+            class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+            required
+          />
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            value="<%= oldInput.lastName === '' ? '' : oldInput.lastName %>"
+            class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+            required
+          />
+        </div>
+
+        <!-- Email -->
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value="<%= oldInput.email === '' ? '' : oldInput.email %>"
+          class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+          required
+        />
+
+        <!-- Password -->
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+          required
+        />
+
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+          required
+        />
+
+        <!-- Account Type -->
+        <div class="mt-1">
+          <p class="text-xs font-bold text-gray-500 mb-2 uppercase ml-1">
+            Account Type
+          </p>
+          <div class="flex gap-2">
+            <label class="flex-1 cursor-pointer">
+              <input
+                type="radio"
+                name="userType"
+                value="guest"
+                class="peer hidden"
+                checked
+                <%= oldInput.userType === 'guest' ? 'checked' : '' %>
+              />
+              <div class="text-center py-2 text-sm rounded-lg border border-gray-200 bg-gray-50 text-gray-500 font-semibold peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-500 transition-all">
+                Guest
+              </div>
+            </label>
+
+            <label class="flex-1 cursor-pointer">
+              <input
+                type="radio"
+                name="userType"
+                value="host"
+                class="peer hidden"
+                <%= oldInput.userType === 'host' ? 'checked' : '' %>
+              />
+              <div class="text-center py-2 text-sm rounded-lg border border-gray-200 bg-gray-50 text-gray-500 font-semibold peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-500 transition-all">
+                Host
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="flex items-center gap-2 px-1 mt-1">
+          <input
+            type="checkbox"
+            name="terms"
+            id="terms"
+            class="w-4 h-4 accent-amber-500 cursor-pointer"
+            required
+          />
+          <label for="terms" class="text-xs text-gray-600 cursor-pointer">
+            I agree to the
+            <span class="text-amber-600 font-semibold">terms & conditions</span>
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-amber-200 active:scale-95 transition-all mt-2"
+        >
+          Sign Up
+        </button>
+
+        <!-- Login Link -->
+        <p class="text-center text-xs text-gray-500 mt-2">
+          Already a member?
+          <a href="/login" class="text-amber-600 font-bold hover:underline">
+            Login
+          </a>
+        </p>
+
+      </form>
+    </div>
+  </main>
+
+
+  <!-- This is for mobile. It works on three lines thing -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("mobile-menu");
+
+    if (!btn || !menu) return;
+
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+    });
+  });
+</script>
+
+</body>
+</html>

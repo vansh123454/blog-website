@@ -1,0 +1,13 @@
+<form action="/delete-post" method="POST" class="inline">
+  <input type="hidden" name="postId" value="<%= post._id %>">
+  <button
+    type="submit"
+    class="flex items-center gap-1 px-3 py-1.5
+           text-sm font-semibold text-white
+           bg-red-500 rounded-lg
+           hover:bg-red-600 active:scale-95
+           transition hover:cursor-pointer"
+  >
+    🗑️ Delete
+  </button>
+</form> 

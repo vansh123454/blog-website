@@ -1,0 +1,90 @@
+<%- include('../partial/head') %>
+</head>
+<body>
+  <%- include('../partial/nav')%> 
+  <form
+  action="/edit-profile"
+  method="POST"
+  enctype="multipart/form-data"
+  class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-12"
+>
+    <div class="flex flex-col md:flex-row items-center gap-8">
+
+      <!-- image Preview -->
+      <div class="flex flex-col items-center gap-4">
+        <!-- /images/image1.png -->
+         <!-- <%= userProfileUpperLevel ? userProfileUpperLevel.image : '/images/image1.png' %> -->
+        <img
+          src="<%= userProfileUpperLevel ? userProfileUpperLevel.image : '/images/image1.png' %>"
+          alt="user image"
+          class="w-32 h-32 rounded-full object-cover border-4 border-red-500 shadow-md"
+        />
+      </div>
+
+      <!-- User Info -->
+      <div class="flex-1 w-full">
+
+        <!-- image URL -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">
+            image
+          </label>
+          <input
+            type="file"
+            name="image"
+            value="<%= userProfileUpperLevel ? userProfileUpperLevel.image : '/images/image1.png' %>"
+            class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 outline-none"
+          />
+        </div> 
+
+        <!-- Bio -->
+        <div class="mb-6">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">
+            Bio
+          </label>
+          <textarea
+            name="bio"
+            rows="3"
+            placeholder="Tell something about yourself..."
+            value = "<%= userProfileUpperLevel ? userProfileUpperLevel.bio : 'No bio added yet.' %>"
+            class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 outline-none"
+          ><%= userProfileUpperLevel ? userProfileUpperLevel.bio : '' %>
+        </textarea>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-4">
+          <button
+            type="submit"
+            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition shadow-md hover:cursor-pointer"
+          >
+            Save Changes
+          </button>
+
+          <a
+            href="/profile"
+            class="px-6 py-3 rounded-lg font-semibold text-gray-600 hover:bg-gray-100"
+          >
+            Cancel
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+  <!-- This is for mobile. It works on three lines thing -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("mobile-menu");
+
+    if (!btn || !menu) return;
+
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+    });
+  });
+</script>
+
+</body>

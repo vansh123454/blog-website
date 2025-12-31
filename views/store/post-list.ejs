@@ -1,0 +1,144 @@
+<%- include('../partial/head') %> 
+</head>
+
+<body class="bg-gray-50">
+  <%- include('../partial/nav') %>
+
+  <main class="min-h-screen py-10"> 
+    <ul class="flex flex-col items-center gap-8">
+
+      <% registeredPosts.forEach((post) => { %>
+
+        <!-- for unsave button in the home section after saving the post -->
+        <% const isSaved = savedIds.includes(post._id.toString()); %> 
+
+        <li class="w-full max-w-lg">
+          <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+
+            <!-- Post Header -->
+            <div class="flex items-center gap-3 px-5 py-4">
+              <img
+                src="<%= post.image %>"
+                alt="author"
+                class="w-9 h-9 rounded-full object-cover ring-2 ring-red-100"
+              />
+
+              <div class="flex flex-col">
+                <a
+                  href="/profile"
+                  class="text-sm font-semibold text-gray-900 hover:text-red-600 transition"
+                >
+                  <%= post.user ? post.user.firstName + ' ' + post.user.lastName : 'Unknown User' %>
+                </a>
+                <span class="text-xs text-gray-500">
+                  <%= post.createdAt.toString().split(' GMT')[0] %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Post Image -->
+            <div class="relative w-full aspect-[4/3] bg-gray-100 overflow-hidden">
+              <img
+                src="<%= post.image %>"
+                alt="post image"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+
+            <!-- Post Content -->
+            <div class="px-5 py-4 space-y-2">
+              <h2 class="text-base font-semibold text-gray-900">
+                <%= post.title %>
+              </h2>
+
+              <p class="text-sm text-gray-600 leading-relaxed line-clamp-2">
+                <%= post.content %>
+              </p>
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-2 pt-2">
+                <span class="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full font-medium">
+                  <%= post.tags %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Post Actions -->
+            <div class="flex items-center justify-between px-5 py-3 border-t bg-gray-50 text-xs text-gray-600">
+              <div class="flex items-center gap-6">
+                
+                <%- include('../partial/like', { post: post, user: user }) %>
+
+
+                <% if(user && user.userType === 'guest'){ %>  <!-- this is for guest or host -->
+                    <% if(isSaved){ %>
+                      <form action="/saved/remove/<%= post._id %>" method="POST">
+                        <button type="submit" class="text-xs font-semibold text-red-600 hover:cursor-pointer">
+                          Unsave
+                        </button>
+                      </form>
+                    <% }else{ %>
+                      <%- include('../partial/saved', { post: post })%> 
+                    <% } %>
+
+                <% } else { %>
+                      <%- include('../partial/hostDelete', { post: post })%> 
+                <% } %>
+              </div>
+            </div>
+
+          </div>
+        </li>
+      <% }) %>
+
+    </ul>
+  </main>
+
+
+
+
+  <!-- This is for mobile. It works on three lines thing -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("mobile-menu");
+
+    if (!btn || !menu) return;
+
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+    });
+  });
+</script>
+
+
+<!-- // For like button -->
+<script>
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const postId = btn.dataset.id;
+
+      const res = await fetch(`/likes/${postId}`, {
+        method: 'POST' // method post hai aur router me bhi post method hai means match ho raha hai
+      });
+
+      const data = await res.json(); // we sent json object from likes controller
+
+      // update count
+      btn.querySelector('.like-count').innerText = data.likesCount;
+
+      // update text
+      btn.querySelector('.like-text').innerText =
+        data.liked ? 'Liked' : 'Like';
+
+      // update color
+      btn.classList.toggle('text-red-600', data.liked);
+      btn.classList.toggle('text-gray-700', !data.liked);
+      
+    });
+  });
+</script>
+
+
+
+</body>

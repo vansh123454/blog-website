@@ -1,0 +1,131 @@
+<%- include('../partial/head') %>
+</head>
+
+<body class="bg-gray-50">
+  <%- include('../partial/nav') %>
+
+  <main class="min-h-screen py-10">
+    <ul class="flex flex-col items-center gap-8">
+
+      <% savedPosts.forEach((save) => { %>
+        <li class="w-full max-w-lg">
+          <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+
+            <!-- Post Header -->
+            <div class="flex items-center gap-3 px-5 py-4">
+              <img
+                src="<%= save.image %>"
+                alt="author"
+                class="w-9 h-9 rounded-full object-cover ring-2 ring-red-100"
+              />
+
+              <div class="flex flex-col leading-tight">
+                <a
+                  href="/profile"
+                  class="text-sm font-semibold text-gray-900 hover:text-red-600 transition"
+                >
+                  <%= save.user.firstName %> <%= save.user.lastName %>
+                </a>
+                <span class="text-xs text-gray-500">
+                  <%= save.createdAt.toString().split(' GMT')[0] %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Post Image -->
+            <div class="relative w-full aspect-[4/3] bg-gray-100 overflow-hidden">
+              <img
+                src="<%= save.image %>"
+                alt=""
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+
+            <!-- Post Content -->
+            <div class="px-5 py-4 space-y-2">
+              <h2 class="text-base font-semibold text-gray-900">
+                <%= save.title %>
+              </h2>
+
+              <p class="text-sm text-gray-600 leading-relaxed line-clamp-2">
+                <%= save.content %>
+              </p>
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-2 pt-2">
+                <span class="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full font-medium">
+                  <%= save.tags %>
+                </span>
+                
+              </div>
+            </div>
+
+            <!-- Post Actions -->
+            <div class="flex items-center justify-between px-5 py-3 border-t bg-gray-50 text-xs text-gray-600">
+              <div class="flex items-center gap-6">
+
+                <%- include('../partial/like', { post: save, user: user }) %>
+
+                <form action="/saved/remove/<%= save._id %>" method="POST">
+                  <button
+                    type="submit"
+                    class="flex items-center gap-1 text-xs font-medium text-gray-500
+                          hover:text-red-600 transition
+                          px-3 py-1 rounded-full hover:bg-red-50 hover:cursor-pointer"
+                  >
+                    Unsaved
+                  </button>
+                </form>
+
+              </div> 
+            </div>
+
+          </div>
+        </li>
+      <% }) %>
+
+    </ul>
+  </main>
+
+  <!-- Mobile menu script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("menu-btn");
+      const menu = document.getElementById("mobile-menu");
+
+      if (!btn || !menu) return;
+
+      btn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+      });
+    });
+  </script>
+
+
+
+  <!-- This is for like button  -->
+<script>
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const postId = btn.dataset.id;
+      const res = await fetch(`/likes/${postId}`, {
+        method: 'POST'
+      });
+
+      const data = await res.json();
+
+      // update count
+      btn.querySelector('.like-count').innerText = data.likesCount; //data.likesCount-  we sent from likesController
+
+      // update text
+      btn.querySelector('.like-text').innerText =
+        data.liked ? 'Liked' : 'Like';  // data.liked - we sent from likesController
+
+      // update color // just color
+      btn.classList.toggle('text-red-600', data.liked); 
+      btn.classList.toggle('text-gray-700', !data.liked);
+    });
+  });
+</script>
+
+</body>

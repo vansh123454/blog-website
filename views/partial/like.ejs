@@ -1,0 +1,18 @@
+<button
+  type="button"
+  class="like-btn inline-flex items-center gap-2 
+         text-sm font-medium
+         transition-all duration-150
+         active:scale-95
+         hover:cursor-pointer
+         <%= post.likes.includes(user?._id) ? 'text-red-600' : 'text-gray-700' %>"
+  data-id="<%= post._id %>"
+>
+  <span class="like-text">
+    <%= post.likes.includes(user?._id) ? 'Liked' : 'Like' %>
+  </span>
+
+  <span class="like-count text-sm font-semibold text-gray-600">
+    <%= post.likes.length %>
+  </span>
+</button>

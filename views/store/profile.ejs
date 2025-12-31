@@ -1,0 +1,145 @@
+<%- include('../partial/head') %>
+</head>
+<body class="bg-gray-50">
+  <%- include('../partial/nav')%>
+  <main class="min-h-[80vh] py-12 px-4">
+
+    <!-- Profile Card -->
+    <section class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-12">
+      <div class="flex flex-col md:flex-row items-center gap-8">
+        
+        <!-- Avatar -->
+        <img
+          src="<%= userProfile && userProfile.image ? userProfile.image : '/images/image1.png' %>"
+          alt="user avatar"
+          class="w-32 h-32 rounded-full object-cover border-4 border-red-500 shadow-md"
+        />
+
+        <!-- User Info -->
+        <div class="flex-1 text-center md:text-left">
+          <h1 class="text-3xl font-bold text-gray-900">
+            <%= user.firstName %> <%= user.lastName%>
+          </h1>
+          <p class="text-gray-600 mt-2 text-lg">
+            <%= userProfile && userProfile.bio ? userProfile.bio : 'No bio added yet.' %>
+          </p>
+
+          <!-- Stats -->
+          <div class="flex justify-center md:justify-start gap-8 mt-6 text-sm">
+            <div class="text-center">
+              <p class="font-bold text-gray-900 text-xl"><%= countPosts%></p>
+              <p class="text-gray-500">Posts</p>
+            </div>
+            <div class="text-center">
+              <p class="font-bold text-gray-900 text-xl">0</p>
+              <p class="text-gray-500">Followers</p>
+            </div>
+            <div class="text-center">
+              <p class="font-bold text-gray-900 text-xl">0</p>
+              <p class="text-gray-500">Following</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action -->
+        <a href="/edit-profile"
+          class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition shadow-md hover:shadow-lg"
+        >
+          Edit Profile
+        </a>
+      </div>
+    </section>
+
+    <!-- User Posts -->
+    <section class="max-w-6xl mx-auto">
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">
+        Posts by <%= user.firstName %>
+      </h2>
+
+      <% if(userPosts.length === 0){ %>
+        <p class="text-gray-500 text-center">No posts yet.</p>
+      <% } %>
+
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% userPosts.forEach((post)=>{ %>
+        <!-- Post Item -->
+          <li class="list-none">
+            <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 h-[400px] flex flex-col">
+              
+              <!-- Image -->
+              <div class="h-48 w-full overflow-hidden">
+                <img
+                  src="<%= post.image %>"
+                  alt="post image"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <span class="text-xs text-gray-500 px-5 py-1">
+                <%= post.createdAt.toString().split(' GMT')[0] %>
+              </span>
+
+              <!-- Content -->
+              <div class="p-5 flex-1 flex flex-col justify-between">
+                <div class="space-y-3 overflow-hidden">
+                  <h3 class="font-bold text-gray-900 text-lg line-clamp-1">
+                    <%= post.title %>
+                  </h3>
+
+                  <p class="text-sm text-gray-700 line-clamp-3">
+                    <%= post.content %>
+                  </p>
+
+                  <div class="flex flex-wrap gap-2 pt-2">
+                    <span class="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full font-medium line-clamp-1">
+                      <%= post.tags %>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Post Actions -->
+                <div class="flex items-center justify-between mt-2 px-0 py-3 border-t bg-gray-50 text-xs text-gray-600">
+                  <div class="flex items-center gap-6">
+                    <%- include('../partial/like', { post: post, user: user }) %>
+                  </div>
+
+                  <%- include('../partial/delete',{post: post}) %>
+                </div> 
+              </div>
+
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+
+    </section>
+
+  </main>
+
+  <!-- Mobile Menu Script -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("mobile-menu");
+    if (!btn || !menu) return;
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+    });
+  });
+  </script>
+
+  <!-- Like Button Script -->
+  <script>
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const postId = btn.dataset.id;
+      const res = await fetch(`/likes/${postId}`, { method: 'POST' });
+      const data = await res.json();
+      btn.querySelector('.like-count').innerText = data.likesCount;
+      btn.querySelector('.like-text').innerText = data.liked ? 'Liked' : 'Like';
+      btn.classList.toggle('text-red-600', data.liked);
+      btn.classList.toggle('text-gray-700', !data.liked);
+    });
+  });
+  </script>
+
+</body>
