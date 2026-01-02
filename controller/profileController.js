@@ -51,10 +51,14 @@ exports.postEditProfileChanged = async (req,res,next) =>{ // db operations ara a
   if (req.file) {
     // new image uploaded
     image = req.file.path;
-  } else {
+  } else if (existingProfile){
     // keep old image
     image = existingProfile.image;
+  } else{
+    image = undefined;
   }
+
+  
 
   await Profile.findOneAndUpdate(
     {user: userId},               // find profile

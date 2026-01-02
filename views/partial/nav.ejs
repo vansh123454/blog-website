@@ -2,43 +2,103 @@
   <nav class="max-w-7xl mx-auto px-6 py-3">
 
     <!-- Top Row -->
-    <div class="flex items-center justify-start gap-10">
+    <div class="flex items-center gap-10">
 
       <!-- Logo -->
       <a href="/" class="text-2xl font-extrabold text-red-600">
         MyBlog
       </a>
 
-      <!-- Hamburger (Mobile only) -->
-      <button
-        id="menu-btn"
-        class="md:hidden ml-auto text-gray-700 focus:outline-none"
-      >
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2"
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button> 
+      <!-- Hamburger + Mobile Menu -->
+      <div class="relative md:hidden ml-auto">
+
+        <!-- Hamburger Button -->
+        <button
+          id="menu-btn"
+          class="p-2 rounded-lg hover:bg-gray-100 transition focus:outline-none"
+          aria-label="Toggle menu"
+        >
+          <svg class="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <!-- Mobile Dropdown Menu -->
+        <div
+          id="mobile-menu"
+          class="hidden absolute right-0 top-full mt-3 w-56
+                 bg-white shadow-xl rounded-xl border border-gray-100
+                 p-2 font-medium text-gray-700 z-50
+                 transition-all duration-200 origin-top-right"
+        >
+
+          <% if(isLoggedIn){ %>
+            <% if(user?.userType === 'guest'){ %>
+              <a href="/" class="block px-4 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition
+              <%= currPage === 'home' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : '' %>">
+                Home
+              </a>
+              <a href="/add-post" class="block px-4 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition
+              <%= currPage === 'addPost' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : '' %>">
+                Add Post
+              </a>
+              <a href="/saved" class="block px-4 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition
+              <%= currPage === 'saved' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : '' %>">
+                Saved Posts
+              </a>
+              <a href="/profile" class="block px-4 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition
+              <%= currPage === 'userProfile' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : '' %>">
+                Profile
+              </a>
+            <% } else { %>
+              <a href="/" class="hover:text-red-600">Home</a>
+            <% } %>
+          <% } %>
+
+          <div class="my-2 border-t"></div>
+
+          <% if(!isLoggedIn){ %>
+            <a href="/login" class="block px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+              Login
+            </a>
+            <a href="/signup" class="block px-4 py-2 rounded-lg text-red-600 font-semibold hover:bg-red-50 transition">
+              Sign Up
+            </a>
+          <% } else { %>
+            <form action="/logout" method="POST">
+              <button
+                class="w-full text-left px-4 py-2 rounded-lg
+                       text-red-600 font-semibold
+                       hover:bg-red-50 transition hover:cursor-pointer"
+              >
+                Logout
+              </button>
+            </form>
+          <% } %>
+
+        </div>
+      </div>
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex items-center gap-8 font-medium text-gray-700">
         <% if(isLoggedIn){ %>
           <% if(user && user.userType === 'guest'){ %>
             <a href="/" class="hover:text-red-600 
-            <%= currPage === 'home' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : 'text-gray-600' %> ">
+              <%= currPage === 'home' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : '' %>">
               Home
             </a>
             <a href="/add-post" class="hover:text-red-600 
-            <%= currPage === 'addPost' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : 'text-gray-600' %> ">
+              <%= currPage === 'addPost' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : '' %>">
               Add Post
             </a>
             <a href="/saved" class="hover:text-red-600
-            <%= currPage === 'saved' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : 'text-gray-600' %>">
+              <%= currPage === 'saved' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : '' %>">
               Saved
             </a>
             <a href="/profile" class="hover:text-red-600
-            <%= currPage === 'userProfile' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : 'text-gray-600' %>">
+              <%= currPage === 'userProfile' ? 'text-red-600 font-semibold border-b-2 border-red-600 pb-1' : '' %>">
               Profile
             </a>
           <% } else { %>
@@ -51,46 +111,18 @@
       <div class="hidden md:flex items-center gap-4 ml-auto">
         <% if(!isLoggedIn){ %>
           <a href="/login" class="hover:text-red-600">Login</a>
-          <a href="/signup" class="bg-red-600 text-white px-4 py-2 rounded-lg">
+          <a href="/signup" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
             Sign Up
           </a>
         <% } else { %>
           <form action="/logout" method="POST">
-            <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:cursor-pointer">
+            <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition hover:cursor-pointer">
               Logout
             </button>
           </form>
         <% } %>
       </div>
+
     </div>
-
-    <!-- Mobile Menu -->
-    <div
-      id="mobile-menu"
-      class="hidden md:hidden mt-4 space-y-3 border-t pt-4 font-medium text-gray-700"
-    >
-      <% if(isLoggedIn){ %>
-        <% if(user?.userType === 'guest'){ %>
-          <a href="/" class="block">Home</a>
-          <a href="/add-post" class="block">Add Post</a>
-          <a href="/saved" class="block">Saved Posts</a>
-          <a href="/profile" class="block">Profile</a>
-        <% } else { %>
-          <a href="/host/banned-post" class="block">Banned Posts</a>
-        <% } %>
-      <% } %>
-
-      <% if(!isLoggedIn){ %>
-        <a href="/login" class="block">Login</a>
-        <a href="/signup" class="block text-red-600 font-semibold">Sign Up</a>
-      <% } else { %>
-        <form action="/logout" method="POST">
-          <button class="text-red-600 font-semibold hover:cursor-pointer">
-            Logout
-          </button>
-        </form>
-      <% } %>
-    </div>
-
   </nav>
 </header>

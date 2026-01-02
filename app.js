@@ -77,6 +77,20 @@ app.use((req,res,next)=>{
   next();
 })
 
+
+// First Router
+// This will help to prevent the page rendering without logged in, if he is trying to write url.
+app.use((req, res, next) => {
+  const publicRoutes = ['/login', '/signup', '/'];
+  if (publicRoutes.includes(req.path)) {
+    return next();
+  }
+  if (!req.session.isLoggedIn) {
+    return res.redirect('/login');
+  }
+  next();
+});
+
 // Roters here
 app.use(storeRouter);
 app.use(authRouter);
