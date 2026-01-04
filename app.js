@@ -14,7 +14,8 @@ const {storeRouter} = require('./routes/storeRouter');
 const { authRouter } = require('./routes/authRouter');
 const { hostRouter } = require('./routes/hostRouter');
 const {profileRouter} = require('./routes/profileRouter');
-const {likesRouter} = require('./routes/likesRouter');
+const {likesRouter} = require('./routes/likesRouter'); 
+const errorController = require('./controller/errorController'); // different on
 
 // view engine for ejs
 app.set('view engine', 'ejs'); // imp line for ejs
@@ -106,6 +107,7 @@ app.use("/host", (req,res,next)=>{ // this line is also important
 
 app.use("/host",hostRouter);
 
+app.use(errorController.pageNotFound);
 
 const PORT = 3003;
 mongoose.connect(DB_PATH).then(()=>{
