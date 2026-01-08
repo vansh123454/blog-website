@@ -11,11 +11,11 @@ const postsSchema = mongoose.Schema(
     },
     content:{
       type: String,
-      required: [true,"Please enter the content"]
+      // required: [true,"Please enter the content"]
     },
     tags: {
       type: String,
-      required: [true,"Please enter the tags"]
+      // required: [true,"Please enter the tags"]
     },
     user: { // this very very imp when 1 user post then if other user is logged in then he can see his post without any problem
       type: mongoose.Schema.Types.ObjectId,
